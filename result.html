@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="result-container">
+    <h2>Analysis Results</h2>
+    
+    <div class="result-grid">
+        <div class="uploaded-image">
+            <h3>Uploaded Image</h3>
+            <img src="{{ image_path }}" alt="Uploaded tomato leaf">
+        </div>
+        
+        <div class="diagnosis">
+            <h3>Diagnosis</h3>
+            <div class="diagnosis-details">
+                <h4>Detected Disease:</h4>
+                <p class="disease-name">{{ disease }}</p>
+                
+                <h4>Description:</h4>
+                <p>{{ description }}</p>
+                
+                <h4>Recommended Treatment:</h4>
+                <p>{{ treatment }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="action-buttons">
+        <a href="{{ url_for('home') }}" class="btn-secondary">Analyze Another Image</a>
+    </div>
+</div>
+{% endblock %}

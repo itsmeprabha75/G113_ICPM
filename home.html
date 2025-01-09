@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="home-container">
+    <h1>Disease Prediction</h1>
+    <div class="upload-section">
+        <h2>Upload Image</h2>
+        <form method="POST" action="{{ url_for('predict') }}" enctype="multipart/form-data" class="upload-form">
+            <div class="form-group">
+                <label for="image">Select a tomato leaf image:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn-primary">Analyze Image</button>
+        </form>
+    </div>
+
+
+    <div class="info-section">
+        <h2>Healthy Tomato Leaf Reference</h2>
+        <div class="reference-image">
+            <img src="static/healthy-leaf/0c4b06d5-4053-44fc-99b6-504934fdd3a9___GH_HL Leaf 199.1.JPG" alt="Healthy Tomato Leaf">
+            <p>Example of a healthy tomato leaf</p>
+        </div>
+        <section>
+            <h2>Weather Details</h2>
+            <div id="weatherDetails"></div>
+        </section>
+        <h2>Disease Information</h2>
+        <div class="disease-list">
+            <p>Our system can detect the following diseases:</p>
+            <ul>
+                <li>Tomato Mosaic Virus</li>
+                <li>Target Spot</li>
+                <li>Bacterial Spot</li>
+                <li>Yellow Leaf Curl Virus</li>
+                <li>Late Blight</li>
+                <li>Leaf Mold</li>
+                <li>Early Blight</li>
+                <li>Spider Mites</li>
+                <li>Septoria Leaf Spot</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    function getWeather() {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const apiKey = '00d842ae7e1496c10d8433c3898ceb68';
+                const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const weatherDetails = document.getElementById('weatherDetails');
+                const minTemp = Math.round(data.main.temp_min - 273.15);
+                const maxTemp = Math.round(data.main.temp_max - 273.15);
+                const humidity = data.main.humidity;
+                const weatherCondition = data.weather[0].description;
+
+                weatherDetails.innerHTML = `<p>Location: ${data.name}</p>
+                    <p>Temperature: ${minTemp}°C - ${maxTemp}°C</p>
+                    <p>Humidity: ${humidity}%</p>
+                    <p>Weather Condition: ${weatherCondition}</p>`;
+            })
+            .catch(error => console.error('Error fetching weather data:', error));
+    });
+} else {
+    alert("Geolocation is not supported by this browser.");
+}
+}
+
+    function navigateToDiseasePrediction() {
+        window.location.href = 'disease-prediction.html';
+    }
+
+    window.onload = getWeather;
+</script>
+{% endblock %}
